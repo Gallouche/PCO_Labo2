@@ -15,9 +15,11 @@ TEMPLATE = app
 SOURCES += \  
     src/mainwindow.cpp \
     src/main.cpp \
-    src/threadmanager.cpp
+    src/threadmanager.cpp \
+    src/threadhack.cpp
 HEADERS  += \ 
     src/mainwindow.h \
-    src/threadmanager.h
+    src/threadmanager.h \
+    src/threadhack.h
 FORMS    += \ 
     ui/mainwindow.ui
