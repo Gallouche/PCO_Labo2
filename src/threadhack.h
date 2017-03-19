@@ -24,17 +24,17 @@ private:
     unsigned int nbChars;
     QString currentHash;
     QString hash;
+    unsigned int startAt;
 public:
     static QString password;
     static bool finished;
-    ThreadHack(unsigned int nb,
-               unsigned int sh,
-               QString ch,
+    ThreadHack(QString ch,
                long long unsigned int nbToCom,
                unsigned int nbVCh,
                QString s,
                unsigned int nbC,
-               QString h);
+               QString h,
+               unsigned int star);
 signals:
     void signalProg();
 };

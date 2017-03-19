@@ -81,15 +81,22 @@ QString ThreadManager::startHacking(
      */
     nbValidChars       = charset.length();
 
+    long long unsigned int nbComputeByThread = nbToCompute/nbThreads;
+    int startAt = 0;
 
     ThreadHack* myThread;
     for(unsigned int i = 0; i < nbThreads; i++)
     {
-        myThread = new ThreadHack(nbThreads, i, charset, nbToCompute, nbValidChars, salt, nbChars, hash);
+        if(i+1 == nbThreads){
+            nbComputeByThread = nbToCompute - (nbComputeByThread*nbThreads);
+        }
+        myThread = new ThreadHack(charset,nbComputeByThread, nbValidChars, salt, nbChars, hash, startAt);
         threadList.append(myThread);
         connect(myThread, SIGNAL(signalProg()), this, SLOT(progressionThread()));
 
         myThread->start();
+
+        startAt += nbComputeByThread;
     }
 
     for(unsigned int i = 0; i < nbThreads; i++)
