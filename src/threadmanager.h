@@ -14,7 +14,7 @@
 
 #include <QObject>
 #include <QString>
-
+#include "threadhack.h"
 /**
  * \brief The ThreadManager class
  *
@@ -24,7 +24,8 @@ class ThreadManager: public QObject
 {
     Q_OBJECT
 private:
-
+    QList<ThreadHack*> threadList;
+    long long unsigned int nbToCompute;
 public:
     /**
      * \brief ThreadManager Constructeur simple
@@ -57,6 +58,8 @@ signals:
      * reverser le hash md5
      */
     void incrementPercentComputed(double percentComputed);
+public slots:
+    void progressionThread();
 };
 
 #endif // THREADMANAGER_H

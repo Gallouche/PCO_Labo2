@@ -46,10 +46,9 @@ QString ThreadManager::startHacking(
         unsigned int nbThreads
 )
 {
-    unsigned int i;
+    ThreadHack::password = "";
 
     long long unsigned int nbToCompute;
-    long long unsigned int nbComputed;
 
     /*
      * Nombre de caractères différents pouvant composer le mot de passe
@@ -73,33 +72,41 @@ QString ThreadManager::startHacking(
     QString currentHash;
 
     /*
-     * Object QCryptographicHash servant à générer des md5
-     */
-    QCryptographicHash md5(QCryptographicHash::Md5);
-
-    /*
      * Calcul du nombre de hash à générer
      */
     nbToCompute        = intPow(charset.length(),nbChars);
-    nbComputed         = 0;
 
     /*
      * Nombre de caractères différents pouvant composer le mot de passe
      */
     nbValidChars       = charset.length();
 
-    /*
-     * On initialise le premier mot de passe à tester courant en le remplissant
-     * de nbChars fois du premir carcatère de charset
-     */
 
-    for(int i = 0; i < nbThreads; i++)
+    ThreadHack* myThread;
+    for(unsigned int i = 0; i < nbThreads; i++)
     {
-        ThreadHack myThread = new ThreadHack(nbThreads, i);
+        myThread = new ThreadHack(nbThreads, i, charset, nbToCompute, nbValidChars, salt, nbChars, hash);
+        threadList.append(myThread);
+        connect(myThread, SIGNAL(signalProg()), this, SLOT(progressionThread()));
+
+        myThread->start();
     }
+
+    for(unsigned int i = 0; i < nbThreads; i++)
+    {
+        myThread = threadList.at(i);
+        myThread->wait();
+        delete myThread;
+    }
+    threadList.clear();
+
     /*
      * Si on arrive ici, cela signifie que tous les mot de passe possibles ont
      * été testés, et qu'aucun n'est la préimage de ce hash.
      */
-    return QString("");
+    return ThreadHack::password;
+}
+void ThreadManager::progressionThread()
+{
+    emit incrementPercentComputed((double)1000/nbToCompute);
 }
