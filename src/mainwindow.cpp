@@ -3,7 +3,7 @@
 
 #include "mainwindow.h"
 #include "threadmanager.h"
-
+#include <iostream>
 #include "ui_mainwindow.h"
 
 const QString MainWindow::validChars = QString("abcdefghijklmnopqrstuvwxyz"

@@ -1,6 +1,6 @@
 #include <QCryptographicHash>
 #include <QVector>
-
+#include <iostream>
 #include "threadmanager.h"
 #include "threadhack.h"
 /*
@@ -46,9 +46,8 @@ QString ThreadManager::startHacking(
         unsigned int nbThreads
 )
 {
+    ThreadHack::finished = false;
     ThreadHack::password = "";
-
-    long long unsigned int nbToCompute;
 
     /*
      * Nombre de caractères différents pouvant composer le mot de passe
@@ -75,28 +74,29 @@ QString ThreadManager::startHacking(
      * Calcul du nombre de hash à générer
      */
     nbToCompute        = intPow(charset.length(),nbChars);
-
     /*
      * Nombre de caractères différents pouvant composer le mot de passe
      */
     nbValidChars       = charset.length();
 
     long long unsigned int nbComputeByThread = nbToCompute/nbThreads;
-    int startAt = 0;
+    long long unsigned int startAt = 0;
 
     ThreadHack* myThread;
     for(unsigned int i = 0; i < nbThreads; i++)
     {
         if(i+1 == nbThreads){
-            nbComputeByThread = nbToCompute - (nbComputeByThread*nbThreads);
+            long long unsigned int interm = nbComputeByThread*(nbThreads - 1);
+            nbComputeByThread = nbToCompute - interm;
         }
+        std::cout << nbComputeByThread << std::endl;
         myThread = new ThreadHack(charset,nbComputeByThread, nbValidChars, salt, nbChars, hash, startAt);
         threadList.append(myThread);
         connect(myThread, SIGNAL(signalProg()), this, SLOT(progressionThread()));
 
         myThread->start();
-
         startAt += nbComputeByThread;
+
     }
 
     for(unsigned int i = 0; i < nbThreads; i++)

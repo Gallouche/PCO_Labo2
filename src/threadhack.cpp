@@ -29,9 +29,11 @@ void ThreadHack::run()
 
     long long unsigned int nbComputed = 0;
 
-    for (int i = currentPasswordArray.length(); i > 0; i--) {
-        currentPasswordArray[i] = startAt % charset.length();
+    for (int j = currentPasswordArray.length()-1; j >= 0; j--)
+    {
+        currentPasswordArray[j] = startAt % charset.length();
         startAt /= charset.length();
+
     }
 
     // Pour que chaque thread commence à tester le ieme password possible (i etant son offset)
@@ -49,9 +51,11 @@ void ThreadHack::run()
          * Si on a trouvé, on retourne le mot de passe courant (sans le sel)
          */
         if (currentHash == hash)
+        {
             password = currentPasswordString;
             finished = true;
             return;
+        }
 
         /*
          * Tous les 1000 hash calculés, on notifie qui veut bien entendre
@@ -86,7 +90,6 @@ void ThreadHack::run()
          */
         for (unsigned int i = 0;i<nbChars;i++)
             currentPasswordString[i]  = charset.at(currentPasswordArray.at(i));
-
         nbComputed++;
     }
 }
