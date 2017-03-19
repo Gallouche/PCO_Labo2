@@ -24,7 +24,8 @@ private:
     unsigned int nbChars;
     QString currentHash;
     QString hash;
-    unsigned int startAt;
+    int indexTh;
+    long long unsigned int startAt;
 public:
     static QString password;
     static bool finished;
@@ -34,7 +35,7 @@ public:
                QString s,
                unsigned int nbC,
                QString h,
-               unsigned int star);
+               long long unsigned int star, int inde);
 signals:
     void signalProg();
 };

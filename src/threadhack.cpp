@@ -9,12 +9,13 @@ ThreadHack::ThreadHack(QString ch,
                        QString s,
                        unsigned int nbC,
                        QString h,
-                       unsigned int star)
-    : charset(ch), nbToCompute(nbToCom), nbValidChars(nbVCh), salt(s), nbChars(nbC), hash(h), startAt(star)
+                       long long unsigned int star, int inde)
+    : charset(ch), nbToCompute(nbToCom), nbValidChars(nbVCh), salt(s), nbChars(nbC), hash(h), startAt(star), indexTh(inde)
 {}
 
 void ThreadHack::run()
 {
+     int idx = 0;
     unsigned int i;
     /*
      * Object QCryptographicHash servant à générer des md5
@@ -28,16 +29,17 @@ void ThreadHack::run()
     currentPasswordArray.fill(0,nbChars);
 
     long long unsigned int nbComputed = 0;
-
     for (int j = currentPasswordArray.length()-1; j >= 0; j--)
     {
-        currentPasswordArray[j] = startAt % charset.length();
+        if(indexTh == 1)
+            //std::cout <<"c est la-----------" <<currentPasswordArray.length() -1 -j << std::endl;
+        currentPasswordArray[currentPasswordArray.length() -1 -j] = startAt % charset.length();
         startAt /= charset.length();
 
+        //std::cout << currentPasswordArray[j];
     }
-
-    // Pour que chaque thread commence à tester le ieme password possible (i etant son offset)
-    while (nbComputed < nbToCompute && !finished)
+    //std::cout <<nbToCompute<< std::endl;
+    while (nbComputed <= nbToCompute && !finished)
     {
         /* On vide les données déjà ajoutées au générateur */
         md5.reset();
@@ -62,8 +64,10 @@ void ThreadHack::run()
          * de l'état de notre avancement (pour la barre de progression)
          */
         if (!(nbComputed % 1000))
+        {
+           //std::cout <<"star : " << startAt <<currentPasswordString.toStdString() << std::endl;
             emit signalProg();
-
+        }
         /*
          * On récupère le mot de pass à tester suivant.
          *
@@ -74,7 +78,7 @@ void ThreadHack::run()
          * Le digit de poids faible étant en position 0
          */
         i = 0;
-        while (i < (unsigned int)currentPasswordArray.size()) {
+        while (i < (int)currentPasswordArray.size()) {
             currentPasswordArray[i]++;
 
             if (currentPasswordArray[i] >= nbValidChars) {
@@ -88,8 +92,12 @@ void ThreadHack::run()
          * On traduit les index présents dans currentPasswordArray en
          * caractères
          */
+
         for (unsigned int i = 0;i<nbChars;i++)
             currentPasswordString[i]  = charset.at(currentPasswordArray.at(i));
+       if(indexTh == 1)
+            //std::cout <<"---- "<< indexTh<<"   "<< currentPasswordString.toStdString() << "--------- "<< idx << std::endl;
+        idx++;
         nbComputed++;
     }
 }

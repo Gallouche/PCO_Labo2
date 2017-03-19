@@ -89,8 +89,7 @@ QString ThreadManager::startHacking(
             long long unsigned int interm = nbComputeByThread*(nbThreads - 1);
             nbComputeByThread = nbToCompute - interm;
         }
-        std::cout << nbComputeByThread << std::endl;
-        myThread = new ThreadHack(charset,nbComputeByThread, nbValidChars, salt, nbChars, hash, startAt);
+        myThread = new ThreadHack(charset,nbComputeByThread, nbValidChars, salt, nbChars, hash, startAt, i);
         threadList.append(myThread);
         connect(myThread, SIGNAL(signalProg()), this, SLOT(progressionThread()));
 
