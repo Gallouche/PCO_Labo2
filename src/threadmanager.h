@@ -24,7 +24,9 @@ class ThreadManager: public QObject
 {
     Q_OBJECT
 private:
+    //Liste pour stocker les threads
     QList<ThreadHack*> threadList;
+    //nombre total d'itérations.
     long long unsigned int nbToCompute;
 public:
     /**
@@ -59,6 +61,7 @@ signals:
      */
     void incrementPercentComputed(double percentComputed);
 public slots:
+    //fonction appellée par le signal envoyer par le thread
     void progressionThread();
 };
 

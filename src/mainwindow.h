@@ -14,12 +14,12 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
-#include <QMainWindow>
 #include <QList>
-#include <QElapsedTimer>
 #include <QTimer>
-#include <QRegExp>
 #include <QtCore>
+#include <QRegExp>
+#include <QMainWindow>
+#include <QElapsedTimer>
 
 #include "threadmanager.h"
 
