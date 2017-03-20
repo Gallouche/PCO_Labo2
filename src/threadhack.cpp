@@ -29,14 +29,12 @@ void ThreadHack::run()
     currentPasswordArray.fill(0,nbChars);
 
     long long unsigned int nbComputed = 0;
-    for (int j = currentPasswordArray.length()-1; j >= 0; j--)
+
+    for (unsigned int j = 0 ; j < currentPasswordArray.size(); j++)
     {
-        if(indexTh == 1)
-            //std::cout <<"c est la-----------" <<currentPasswordArray.length() -1 -j << std::endl;
-        currentPasswordArray[currentPasswordArray.length() -1 -j] = startAt % charset.length();
+        currentPasswordArray[j] = startAt % charset.length();
         startAt /= charset.length();
 
-        //std::cout << currentPasswordArray[j];
     }
     //std::cout <<nbToCompute<< std::endl;
     while (nbComputed <= nbToCompute && !finished)
@@ -95,7 +93,7 @@ void ThreadHack::run()
 
         for (unsigned int i = 0;i<nbChars;i++)
             currentPasswordString[i]  = charset.at(currentPasswordArray.at(i));
-       if(indexTh == 1)
+       //if(indexTh == 0)
             //std::cout <<"---- "<< indexTh<<"   "<< currentPasswordString.toStdString() << "--------- "<< idx << std::endl;
         idx++;
         nbComputed++;

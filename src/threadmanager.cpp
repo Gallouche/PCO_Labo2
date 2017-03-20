@@ -86,8 +86,8 @@ QString ThreadManager::startHacking(
     for(unsigned int i = 0; i < nbThreads; i++)
     {
         if(i+1 == nbThreads){
-            long long unsigned int interm = nbComputeByThread*(nbThreads - 1);
-            nbComputeByThread = nbToCompute - interm;
+            //long long unsigned int interm = nbComputeByThread*(nbThreads - 1);
+            nbComputeByThread = nbToCompute - startAt;
         }
         myThread = new ThreadHack(charset,nbComputeByThread, nbValidChars, salt, nbChars, hash, startAt, i);
         threadList.append(myThread);
